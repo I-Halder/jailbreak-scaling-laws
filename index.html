@@ -18,51 +18,39 @@
   <script defer src="assets/js/main.js"></script>
 </head>
 <body>
-  <nav class="page-nav" aria-label="Primary navigation">
-    <div class="nav-inner">
-      <a class="nav-title" href="#top">Jailbreak Scaling Laws</a>
-      <div class="nav-links">
-        <a href="#overview">Overview</a>
-        <a href="#method">Theory</a>
-        <a href="#results">Results</a>
-        <a href="#resources">Resources</a>
-        <a href="#bibtex">BibTeX</a>
-      </div>
-    </div>
-  </nav>
-
   <header id="top" class="hero">
-    <div class="kicker">Preprint project page</div>
-    <h1>Jailbreak Scaling Laws for Large Language Models</h1>
-    <p class="subtitle">Polynomial-Exponential Crossover</p>
+    <h1>
+      Jailbreak Scaling Laws for<br>
+      Large Language Models:<br>
+      Polynomial–Exponential Crossover
+    </h1>
 
     <div class="authors">
       <a href="mailto:ihalder@g.harvard.edu">Indranil Halder</a>,
       <a href="mailto:annesyab@mit.edu">Annesya Banerjee</a>,
       <a href="mailto:cpehlevan@g.harvard.edu">Cengiz Pehlevan</a>
     </div>
-    <div class="affiliations">
-      Harvard SEAS · MIT Department of Brain and Cognitive Sciences · Harvard Medical School · Kempner Institute · Center for Brain Science
-    </div>
 
-    <div class="badges" aria-label="Affiliations">
-      <span class="badge">Harvard University</span>
-      <span class="badge">Massachusetts Institute of Technology</span>
-      <span class="badge">Kempner Institute</span>
+    <div class="affiliation-logos" aria-label="Institution logos">
+      <img class="logo logo-harvard" src="https://upload.wikimedia.org/wikipedia/commons/7/70/Harvard_University_logo.svg" alt="Harvard University logo" onerror="this.onerror=null; this.src='assets/img/logos/harvard-wordmark.svg';">
+      <img class="logo logo-mit" src="https://studyarchitecture.com/wp-content/uploads/mit-logo-1.png" alt="MIT logo" onerror="this.onerror=null; this.src='assets/img/logos/mit-wordmark.svg';">
     </div>
 
     <div class="buttons">
-      <a class="button" href="assets/paper/jailbreak-scaling-laws-draft.pdf">Paper PDF</a>
-      <a class="button secondary" href="paper-source/arxiv.tex">LaTeX source</a>
-      <a class="button secondary" href="mailto:ihalder@g.harvard.edu">Contact</a>
-      <span class="button disabled" title="Replace this with the public repository URL when available">Code link pending</span>
+      <a class="button" href="assets/paper/jailbreak-scaling-laws-draft.pdf" aria-label="Open paper PDF">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6.6 2.9 21.1 17.4l-1.4 1.4L5.2 4.3 6.6 2.9Zm.2 5.5 2.2 2.2-2.7 6.7c-.3.7.2 1.4.9 1.4h5.9l2 2H7.2c-2.1 0-3.6-2.1-2.8-4l2.4-8.3Zm4.3-4.2c.4-.7 1.4-.7 1.8 0l7 14.9-2.7-2.7L12 6.2l-1.4 2.9-1.5-1.5 2-3.4Z"/></svg>
+        arXiv / PDF
+      </a>
+      <a class="button" href="#" aria-label="Open code repository" title="Replace this href with the public repository URL when available">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 .5A11.5 11.5 0 0 0 .5 12.3c0 5.2 3.4 9.6 8.1 11.1.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.5-4-1.5-.6-1.4-1.4-1.8-1.4-1.8-1.1-.8.1-.8.1-.8 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.4-1.3-5.4-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.6.1-3.2 0 0 1-.3 3.3 1.2a11.3 11.3 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.6.2 2.9.1 3.2.8.9 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.4 5.9.4.4.8 1.1.8 2.2v3.4c0 .3.2.7.8.6a11.6 11.6 0 0 0 8.1-11.1A11.5 11.5 0 0 0 12 .5Z"/></svg>
+        Code
+      </a>
     </div>
   </header>
 
   <main>
-    <section id="overview" class="card tldr">
-      <h2 class="section-title">TL;DR</h2>
-      <p class="lead"><strong>Adversarial prompt injection can change inference-time jailbreak scaling from slow polynomial growth to a much faster polynomial-exponential regime.</strong> The paper explains this crossover with a minimal statistical mechanism and a spin-glass-based teacher-student model in which injected prompts act like an effective field aligned with unsafe response clusters.</p>
+    <section id="overview" class="tldr-box">
+      <p><strong>TL;DR.</strong> Adversarial prompt injection can change inference-time jailbreak scaling from slow polynomial growth to a much faster polynomial–exponential regime. The paper explains this crossover with a minimal statistical mechanism and a spin-glass-based teacher-student model in which injected prompts act like an effective field aligned with unsafe response clusters.</p>
     </section>
 
     <section class="card figure-card" aria-labelledby="hero-figure-title">
@@ -267,7 +255,10 @@
 }</code></pre>
     </section>
 
-    <p class="footer">This project page is a static academic website prepared for GitHub Pages. Replace pending links and metadata before public release.</p>
   </main>
+
+  <footer class="footer">
+    <p>This webpage was adapted from a Nerfies-style academic project page template. Replace the Code button href and BibTeX entry once the public repository or arXiv record is available.</p>
+  </footer>
 </body>
 </html>

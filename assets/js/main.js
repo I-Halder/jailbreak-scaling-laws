@@ -1,6 +1,6 @@
 function activateTab(tabGroup, targetId) {
   const buttons = tabGroup.querySelectorAll('[role="tab"]');
-  const panels = document.querySelectorAll(`[data-tab-group="${tabGroup.dataset.tabGroup}"]`);
+  const panels = document.querySelectorAll(`.tab-panel[data-tab-group="${tabGroup.dataset.tabGroup}"]`);
   buttons.forEach((button) => {
     const isSelected = button.getAttribute('aria-controls') === targetId;
     button.setAttribute('aria-selected', String(isSelected));
