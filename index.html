@@ -335,7 +335,7 @@ pre {
 
     <section class="card" aria-labelledby="problem-title">
       <h2 id="problem-title" class="section-title">Jailbreak scaling laws</h2>
-      <p class="lead">The central question is how the attack success rate changes when a model is sampled multiple times at inference time. For each prompt, an attack is counted as successful if at least one of the $k$ generated responses violates the safety criterion under the evaluation protocol.</p>
+      <p class="lead">The central question is how the attack success rate changes when a model is sampled multiple times at inference time. </p>
       <div class="grid-3">
         <div class="metric">
           <div class="label">Object of study</div>
@@ -353,6 +353,7 @@ pre {
           <p>Faster scaling when the injected prompt acts as a stronger adversarial bias.</p>
         </div>
       </div>
+      <p>In our experiments (see the figure above), $\log \left(-\log(\Pi_k)\right)$ for GPT-Turbo-4.5 is indeed approximately linear in $\log k$ under attack, however, the corresponding curve for Llama-3.2-3B-Instruct deviates substantially from linearity. This suggests that the polynomial scaling persists under adversarial prompt injection for stronger models such as GPT-Turbo-4.5. By contrast, for weaker models such as Llama-3.2-3B-Instruct, adversarial prompt injection can lead to a much faster decay of the failure probability. More generally we get following two regimes: <p>
       <div class="equation-block" aria-label="Polynomial and polynomial-exponential scaling equations">
         <div class="eq-label">Scaling forms</div>
         $$\log(-\log \Pi_k) \sim -\hat\nu \log k + \log \hat C$$
@@ -361,34 +362,7 @@ pre {
       <p>The coefficient $\hat\nu$ captures the polynomial component, while $\hat\mu$ captures the exponential correction associated with stronger adversarial alignment.</p>
     </section>
 
-    <section id="method" class="card" aria-labelledby="theory-title">
-      <h2 id="theory-title" class="section-title">Minimal model and spin-glass picture</h2>
-      <p class="lead">The theoretical story has two layers. A minimal statistical model identifies the assumptions under which the two ASR regimes arise. A spin-glass-based teacher-student model then gives a concrete generative picture: safe and unsafe responses correspond to clusters in a rugged low-energy landscape, and prompt injection acts like an external field that increases mass near unsafe clusters.</p>
-      <div class="grid-2">
-        <div class="callout">
-          <h3>Weak effective field</h3>
-          <p>The student and teacher measures remain in a related replica-symmetry-breaking phase, leading to power-law behavior over the relevant inference-time range.</p>
-        </div>
-        <div class="callout">
-          <h3>Strong effective field</h3>
-          <p>The student measure is driven toward an adversarially aligned regime, producing an exponential correction in sample count.</p>
-        </div>
-      </div>
-      <div class="grid-2" style="margin-top: 1.1rem;">
-        <article class="figure-card card flat">
-          <img src="assets/img/th1.png" alt="Numerical attack success rate plot for the spin-glass model in one theorem regime.">
-          <div class="figure-body">
-            <p class="caption">Spin-glass numerical study for the weak-field scaling regime.</p>
-          </div>
-        </article>
-        <article class="figure-card card flat">
-          <img src="assets/img/th1+th2.png" alt="Numerical attack success rate plot comparing two spin-glass theorem regimes.">
-          <div class="figure-body">
-            <p class="caption">Transition behavior when increasing the effective field strength.</p>
-          </div>
-        </article>
-      </div>
-    </section>
+
 
     <section id="results" class="card" aria-labelledby="results-title">
       <h2 id="results-title" class="section-title">Empirical results across model families</h2>
@@ -489,6 +463,34 @@ pre {
       </div>
     </section>
 
+    <section id="method" class="card" aria-labelledby="theory-title">
+      <h2 id="theory-title" class="section-title">Minimal model and spin-glass picture</h2>
+      <p class="lead">The theoretical story has two layers. A minimal statistical model identifies the assumptions under which the two ASR regimes arise. A spin-glass-based teacher-student model then gives a concrete generative picture: safe and unsafe responses correspond to clusters in a rugged low-energy landscape, and prompt injection acts like an external field that increases mass near unsafe clusters.</p>
+      <div class="grid-2">
+        <div class="callout">
+          <h3>Weak effective field</h3>
+          <p>The student and teacher measures remain in a related replica-symmetry-breaking phase, leading to power-law behavior over the relevant inference-time range.</p>
+        </div>
+        <div class="callout">
+          <h3>Strong effective field</h3>
+          <p>The student measure is driven toward an adversarially aligned regime, producing an exponential correction in sample count.</p>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top: 1.1rem;">
+        <article class="figure-card card flat">
+          <img src="assets/img/th1.png" alt="Numerical attack success rate plot for the spin-glass model in one theorem regime.">
+          <div class="figure-body">
+            <p class="caption">Spin-glass numerical study for the weak-field scaling regime.</p>
+          </div>
+        </article>
+        <article class="figure-card card flat">
+          <img src="assets/img/th1+th2.png" alt="Numerical attack success rate plot comparing two spin-glass theorem regimes.">
+          <div class="figure-body">
+            <p class="caption">Transition behavior when increasing the effective field strength.</p>
+          </div>
+        </article>
+      </div>
+    </section>
     <section class="card" aria-labelledby="takeaways-title">
       <h2 id="takeaways-title" class="section-title">Takeaways</h2>
       <div class="grid-3">
