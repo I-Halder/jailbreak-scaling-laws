@@ -252,6 +252,45 @@ p, li { color: #4a4a4a; font-size: 1rem; }
   font-size: 0.9rem;
   font-weight: 500;
 }
+
+.assumption-block {
+  margin: 24px 0;
+  padding: 18px 20px;
+  background: #ffffff;
+  border: 1px solid var(--box-border);
+  border-left: 4px solid #333333;
+  border-radius: 10px;
+}
+.assumption-block .assumption-title {
+  margin: 0 0 10px;
+  color: #333333;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.assumption-block p { margin: 0; }
+.theorem-block {
+  margin: 24px 0;
+  padding: 18px 20px;
+  background: #ffffff;
+  border: 1px solid var(--box-border);
+  border-left: 4px solid #555555;
+  border-radius: 10px;
+}
+.theorem-block .theorem-title {
+  margin: 0 0 10px;
+  color: #333333;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.theorem-block p { margin: 0; }
+.model-figures {
+  margin-top: 22px;
+}
+.model-figures .figure-card img,
+.model-figures .figure-card .figure-body,
+.model-figures .figure-card .caption {
+  max-width: min(100%, 460px);
+}
 .pill-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
 .pill {
   padding: 7px 13px;

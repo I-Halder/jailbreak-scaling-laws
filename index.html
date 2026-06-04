@@ -268,6 +268,45 @@ p, li { color: #4a4a4a; font-size: 1rem; }
   font-size: 0.9rem;
   font-weight: 500;
 }
+
+.assumption-block {
+  margin: 24px 0;
+  padding: 18px 20px;
+  background: #ffffff;
+  border: 1px solid var(--box-border);
+  border-left: 4px solid #333333;
+  border-radius: 10px;
+}
+.assumption-block .assumption-title {
+  margin: 0 0 10px;
+  color: #333333;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.assumption-block p { margin: 0; }
+.theorem-block {
+  margin: 24px 0;
+  padding: 18px 20px;
+  background: #ffffff;
+  border: 1px solid var(--box-border);
+  border-left: 4px solid #555555;
+  border-radius: 10px;
+}
+.theorem-block .theorem-title {
+  margin: 0 0 10px;
+  color: #333333;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.theorem-block p { margin: 0; }
+.model-figures {
+  margin-top: 22px;
+}
+.model-figures .figure-card img,
+.model-figures .figure-card .figure-body,
+.model-figures .figure-card .caption {
+  max-width: min(100%, 460px);
+}
 .pill-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
 .pill {
   padding: 7px 13px;
@@ -445,6 +484,63 @@ pre {
       <p>The coefficient $\hat\nu$ captures the polynomial component, while $\hat\mu$ captures the exponential correction associated with stronger adversarial alignment.</p>
     </section>
 
+    <section id="minimal-model" class="card" aria-labelledby="minimal-model-title">
+      <h2 id="minimal-model-title" class="section-title">Minimal model for the scaling laws</h2>
+      <p>We start by isolating a minimal probabilistic mechanism that gives rise to the inference-time scaling laws studied throughout the paper. Suppose there is a latent variable $Z$ describing the prompt, hidden context, or any other source of heterogeneity. For a fixed value $Z=z$, let $p(z) \in [0,1]$ be the probability that a generated output from the model for the given latent variable is safe.</p>
+      <p>If we draw $k$ independent samples under the same latent state $z$, then the probability that all $k$ samples are safe is simply $p(z)^k$. Therefore the attack success rate for at least one unsafe sample is $\Pi_k(z)=1-p(z)^k$. If we define the random variable $P := p(Z)$, then the population-level attack success rate is</p>
+      <div class="equation-block" aria-label="Population-level attack success rate under repeated sampling">
+        $$
+        \Pi_k=\mathbb{E}\,\Pi_k(Z)=1-\mathbb{E}[P^k]
+        \qquad\Longrightarrow\qquad
+        1-\Pi_k=\mathbb{E}[P^k].
+        $$
+      </div>
+      <div class="assumption-block">
+        <div class="assumption-title">Assumption: Upper-edge tail behavior</div>
+        <p>The random variable $P$ has essential supremum $\hat p = e^{-\hat\mu}$, with $\hat\mu \ge 0$, and there exist constants $\hat\nu \ge 0$ and $\hat c>0$ such that, as $\varepsilon \downarrow 0$, the upper-edge probability obeys</p>
+        <div class="equation-block" aria-label="Upper-edge tail behavior assumption">
+          $$
+          \mathbb{P}\left(P \ge \hat p(1-\varepsilon)\right)
+          =
+          \hat c\,\varepsilon^{\hat\nu}
+          +
+          o\left(\varepsilon^{\hat\nu}\right).
+          $$
+        </div>
+      </div>
+      <p>This assumption has a simple interpretation. Here $\hat p$ is the largest value that the random safe probability $P$ can approach: if $\hat p=1$, then there exist latent states that are arbitrarily close to perfectly safe; if $\hat p&lt;1$, then even the safest latent states still have some irreducible unsafe mass. The exponent $\hat\nu$ describes how much probability mass the population places near this best-case endpoint controlled by the parameter $\hat\mu$. Smaller values of $\hat\nu$ correspond to heavier concentration near the upper edge, whereas larger values of $\hat\nu$ indicate that such nearly maximally safe latent states are rarer.</p>
+            <div class="grid-2 model-figures">
+        <article class="figure-card card flat">
+          <img src="assets/img/llama3B_advbench_per_prompt_distribution_v2.png" alt="Distribution of prompt-level safe-generation probabilities for Llama-3.2-3B-Instruct on AdvBench without adversarial injection.">
+          <div class="figure-body">
+            <p class="caption">Prompt-level distribution of safe-generation probabilities for Llama-3.2-3B-Instruct on AdvBench without adversarial injection. The upper edge of this distribution controls the large-$k$ behavior of $1-\Pi_k$.</p>
+          </div>
+        </article>
+        <article class="figure-card card flat">
+          <img src="assets/img/llama3B_gcg_advbench_per_prompt_distribution_v2.png" alt="Distribution of prompt-level safe-generation probabilities for Llama-3.2-3B-Instruct on AdvBench under GCG injection.">
+          <div class="figure-body">
+            <p class="caption">Prompt-level distribution of safe-generation probabilities for Llama-3.2-3B-Instruct on AdvBench under GCG injection. The injected prompt shifts the upper-edge behavior, changing the inferred scaling parameters.</p>
+          </div>
+        </article>
+      </div>
+      <div class="theorem-block">
+        <div class="theorem-title">Theorem: Asymptotic ASR formula</div>
+        <p>Under the upper-edge tail behavior assumption,</p>
+        <div class="equation-block" aria-label="Asymptotic ASR formula">
+          $$
+          1-\Pi_k\sim \hat{c}\,\Gamma(\hat{\nu}+1)\,e^{-k \hat \mu}\,k^{-\hat{\nu}}
+          \qquad (k\to\infty). \tag{5}
+          $$
+        </div>
+        <p>Equivalently,</p>
+        <div class="equation-block" aria-label="Logarithmic asymptotic ASR formula">
+          $$
+          \log(-\log \Pi_k)\sim-\hat{\nu}\log k-k\hat \mu+ \log (\Gamma(\hat{\nu}+1) \hat{c})
+          \qquad (k\to\infty). \tag{6}
+          $$
+        </div>
+      </div>
+    </section>
 
 
     <section id="results" class="card" aria-labelledby="results-title">
