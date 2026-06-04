@@ -49,3 +49,10 @@ https://YOUR-USERNAME.github.io/jailbreak-scaling-laws/
 ```
 
 For a root user page, create a repository named exactly `YOUR-USERNAME.github.io` and upload the same files there.
+
+
+## Deployment note
+
+This version inlines the project-page CSS and JavaScript in `index.html`. This avoids the common GitHub Pages issue where `assets/css/style.css` is cached from an older deployment and the live site looks different from the local preview.
+
+For the cleanest deployment, remove the old repository contents first, then copy this folder's contents into the repository root and push. Do not only replace `index.html` while leaving old assets in place.
