@@ -307,6 +307,17 @@ p, li { color: #4a4a4a; font-size: 1rem; }
 .model-figures .figure-card .caption {
   max-width: min(100%, 460px);
 }
+
+.theory-note {
+  margin: 20px 0;
+  border-left: 4px solid #333333;
+}
+.graph-dictionary .callout h3 {
+  margin-bottom: 8px;
+}
+.compact-equation {
+  padding: 16px 18px;
+}
 .pill-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
 .pill {
   padding: 7px 13px;
@@ -508,21 +519,6 @@ pre {
           $$
         </div>
       </div>
-      <p>This assumption has a simple interpretation. Here $\hat p$ is the largest value that the random safe probability $P$ can approach: if $\hat p=1$, then there exist latent states that are arbitrarily close to perfectly safe; if $\hat p&lt;1$, then even the safest latent states still have some irreducible unsafe mass. The exponent $\hat\nu$ describes how much probability mass the population places near this best-case endpoint controlled by the parameter $\hat\mu$. Smaller values of $\hat\nu$ correspond to heavier concentration near the upper edge, whereas larger values of $\hat\nu$ indicate that such nearly maximally safe latent states are rarer.</p>
-            <div class="grid-2 model-figures">
-        <article class="figure-card card flat">
-          <img src="assets/img/llama3B_advbench_per_prompt_distribution_v2.png" alt="Distribution of prompt-level safe-generation probabilities for Llama-3.2-3B-Instruct on AdvBench without adversarial injection.">
-          <div class="figure-body">
-            <p class="caption">Prompt-level distribution of safe-generation probabilities for Llama-3.2-3B-Instruct on AdvBench without adversarial injection. The upper edge of this distribution controls the large-$k$ behavior of $1-\Pi_k$.</p>
-          </div>
-        </article>
-        <article class="figure-card card flat">
-          <img src="assets/img/llama3B_gcg_advbench_per_prompt_distribution_v2.png" alt="Distribution of prompt-level safe-generation probabilities for Llama-3.2-3B-Instruct on AdvBench under GCG injection.">
-          <div class="figure-body">
-            <p class="caption">Prompt-level distribution of safe-generation probabilities for Llama-3.2-3B-Instruct on AdvBench under GCG injection. The injected prompt shifts the upper-edge behavior, changing the inferred scaling parameters.</p>
-          </div>
-        </article>
-      </div>
       <div class="theorem-block">
         <div class="theorem-title">Theorem: Asymptotic ASR formula</div>
         <p>Under the upper-edge tail behavior assumption,</p>
@@ -539,6 +535,21 @@ pre {
           \qquad (k\to\infty). \tag{6}
           $$
         </div>
+      </div>
+      <p>This assumption has a simple interpretation. Here $\hat p$ is the largest value that the random safe probability $P$ can approach: if $\hat p=1$, then there exist latent states that are arbitrarily close to perfectly safe; if $\hat p&lt;1$, then even the safest latent states still have some irreducible unsafe mass. The exponent $\hat\nu$ describes how much probability mass the population places near this best-case endpoint controlled by the parameter $\hat\mu$. Smaller values of $\hat\nu$ correspond to heavier concentration near the upper edge, whereas larger values of $\hat\nu$ indicate that such nearly maximally safe latent states are rarer.</p>
+      <div class="grid-2 model-figures">
+        <article class="figure-card card flat">
+          <img src="assets/img/llama3B_advbench_per_prompt_distribution_v2.png" alt="Distribution of prompt-level safe-generation probabilities for Llama-3.2-3B-Instruct on AdvBench without adversarial injection.">
+          <div class="figure-body">
+            <p class="caption">Prompt-level distribution of safe-generation probabilities for Llama-3.2-3B-Instruct on AdvBench without adversarial injection. The upper edge of this distribution controls the large-$k$ behavior of $1-\Pi_k$.</p>
+          </div>
+        </article>
+        <article class="figure-card card flat">
+          <img src="assets/img/llama3B_gcg_advbench_per_prompt_distribution_v2.png" alt="Distribution of prompt-level safe-generation probabilities for Llama-3.2-3B-Instruct on AdvBench under GCG injection.">
+          <div class="figure-body">
+            <p class="caption">Prompt-level distribution of safe-generation probabilities for Llama-3.2-3B-Instruct on AdvBench under GCG injection. The injected prompt shifts the upper-edge behavior, changing the inferred scaling parameters.</p>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -640,69 +651,74 @@ pre {
         </div>
       </div>
 
-      <div class="pill-list" aria-label="Experiment dimensions">
-        <span class="pill">Inference-time sampling</span>
-        <span class="pill">LLM-as-a-judge ASR</span>
-        <span class="pill">AdvBench</span>
-        <span class="pill">HarmBench</span>
-        <span class="pill">Llama 3 / 3.2</span>
-        <span class="pill">OLMo 2 / 3.1</span>
-      </div>
     </section>
 
-    <section id="method" class="card" aria-labelledby="theory-title">
-      <h2 id="theory-title" class="section-title">Minimal model and spin-glass picture</h2>
-      <p class="lead">The theoretical story has two layers. A minimal statistical model identifies the assumptions under which the two ASR regimes arise. A spin-glass-based teacher-student model then gives a concrete generative picture: safe and unsafe responses correspond to clusters in a rugged low-energy landscape, and prompt injection acts like an external field that increases mass near unsafe clusters.</p>
-      <div class="grid-2">
+    <section id="random-graph-theory" class="card" aria-labelledby="random-graph-title">
+      <h2 id="random-graph-title" class="section-title">Random-graph view of safe vs. unsafe generation</h2>
+      <p class="lead"> We present a simple generative model for binary data generation given an input prompt and within this formalism we discuss inference time scaling law from a theoretical point of view. For a prompt $x$, the model builds a dense random weighted hypergraph $G_x$. Candidate completions are assignments of binary numbers to its vertices. More concretely, </p>
+
+      <div class="callout theory-note">
+        <h3></h3>
+        <p> let $G_x=(V,E,J_x)$ be a prompt-dependent weighted $p$-uniform hypergraph with $V=\{1,\ldots,N\}$ and one hyperedge for each $p$-tuple of token positions. A completion is a binary string $\sigma\in\{\pm 1\}^N$.</p>
+      </div>
+
+      <p> Completions are draws using the sampler:</p>
+      <div class="equation-block compact-equation" aria-label="Weighted random hypergraph objective and Gibbs sampler">
+        $$
+        H_x(\sigma)=-\sum_{e\in E}J_e(x)\prod_{i\in e}\sigma_i,
+        \qquad
+        \Pr(\sigma\mid x)\propto \exp\{-\beta H_x(\sigma)\}.
+        $$
+      </div>
+      <p>Thus generation is a randomized search over the hypercube, biased toward high-weight assignments of the prompt-generated graph. The main simplification comes from tractability of the geometry of near-optimal configurations.</p>
+
+      <div class="grid-3 graph-dictionary">
         <div class="callout">
-          <h3>Weak effective field</h3>
-          <p>The student and teacher measures remain in a related replica-symmetry-breaking phase, leading to power-law behavior over the relevant inference-time range.</p>
+          <h3>Prompt $x$</h3>
+          <p>Builds the weighted instance $G_x$. Different prompts induce different random edge weights.</p>
         </div>
         <div class="callout">
-          <h3>Strong effective field</h3>
-          <p>The student measure is driven toward an adversarially aligned regime, producing an exponential correction in sample count.</p>
+          <h3>Completion $\sigma$</h3>
+          <p>A binary labeling of the vertices. Similar completions have large overlap as assignments.</p>
+        </div>
+        <div class="callout">
+          <h3>Probability mass</h3>
+          <p>At large $\beta$ a basin of binary strings with larger mass is sampled more often. Dominant basins can be organized in terms of a hierarchical tree based on semantic similarity given by the overlap.</p>
+        </div>
+      </div>
+
+      <h3>Teacher graph: safety labels are basin weights</h3>
+      <p>The teacher model first defines the safety landscape. At large $\beta$, the high-weight assignments of $G_x$ do not form one smooth region. They split into many basins or clusters, like communities of nearby solutions in a weighted CSP. Each basin $\mathcal V_a(x)$ has a total sampling weight</p>
+      <div class="equation-block compact-equation" aria-label="Cluster or basin weight">
+        $$
+        w_a(x)=\sum_{\sigma\in\mathcal V_a(x)}\Pr(\sigma\mid x).
+        $$
+      </div>
+      <p>After ranking basins by size-biased weight, the first $m$ basins are declared unsafe. A generated answer is unsafe exactly when its sampled assignment lands in one of these unsafe basins. In this language, a “safety failure” is not a property of an isolated output string; it is membership in a high-weight region of the prompt-induced graph.</p>
+
+      <h3>Student graph: injection reweights unsafe basins</h3>
+      <p>The student is the model being attacked. In the clean setting, it samples from nearly the same weighted graph as the teacher. A prompt injection acts like an extra bias aligned with the unsafe basin centers. In graph terms, the attack changes the weights so that assignments near unsafe basins become easier to sample. The safety labels stay fixed, but the sampler’s mass shifts.</p>
+
+
+
+      <h3>Connection to the scaling law</h3>
+      <div class="grid-2">
+        <div class="callout">
+          <h3>Weak reweighting</h3>
+          <p>Unsafe basin weights increase mildly. Some prompt graphs remain almost perfectly safe, so repeated sampling mainly exposes a polynomial tail effect.</p>
+        </div>
+        <div class="callout">
+          <h3>Strong reweighting</h3>
+          <p>The injected prompt pushes mass more directly into unsafe basins. Even the safest prompt graphs retain irreducible unsafe mass, producing the polynomial-exponential crossover.</p>
         </div>
       </div>
       <div class="grid-2" style="margin-top: 1.1rem;">
         <article class="figure-card card flat">
-          <img src="assets/img/th1.png" alt="Numerical attack success rate plot for the spin-glass model in one theorem regime.">
+          <img src="assets/img/th1+th2.png" alt="Numerical attack success rate plot comparing weak and strong random-graph reweighting regimes.">
           <div class="figure-body">
-            <p class="caption">Spin-glass numerical study for the weak-field scaling regime.</p>
+            <p class="caption">Transition from weak to strong reweighting as reweighting coupling $h$ increases.</p>
           </div>
         </article>
-        <article class="figure-card card flat">
-          <img src="assets/img/th1+th2.png" alt="Numerical attack success rate plot comparing two spin-glass theorem regimes.">
-          <div class="figure-body">
-            <p class="caption">Transition behavior when increasing the effective field strength.</p>
-          </div>
-        </article>
-      </div>
-    </section>
-    <section class="card" aria-labelledby="takeaways-title">
-      <h2 id="takeaways-title" class="section-title">Takeaways</h2>
-      <div class="grid-3">
-        <div class="callout">
-          <h3>Sampling matters</h3>
-          <p>Multiple inference-time samples can substantially change the chance of observing at least one unsafe output.</p>
-        </div>
-        <div class="callout">
-          <h3>Injection changes scaling</h3>
-          <p>Prompt injection can move ASR from polynomial growth toward a polynomial-exponential crossover.</p>
-        </div>
-        <div class="callout">
-          <h3>Theory predicts regimes</h3>
-          <p>A spin-glass landscape gives an interpretable model of safe and unsafe response clusters and the role of injection strength.</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="resources" class="card" aria-labelledby="resources-title">
-      <h2 id="resources-title" class="section-title">Resources</h2>
-      <p class="lead">This repository is a static GitHub Pages site. Replace the placeholder code and arXiv links below after public release.</p>
-      <div class="buttons" style="justify-content: flex-start;">
-        <a class="button" href="assets/paper/jailbreak-scaling-laws-draft.pdf">Download paper draft</a>
-        <a class="button secondary" href="paper-source/arxiv.tex">Download LaTeX source</a>
-        <a class="button secondary" href="assets/img/GPT-Turbo_Llama3B_asr_fit_n_trials_2_k128_corrected_judge_org_v3.png">Main figure</a>
       </div>
     </section>
 
