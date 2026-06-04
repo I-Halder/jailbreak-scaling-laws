@@ -214,6 +214,20 @@ p, li { color: #4a4a4a; font-size: 1rem; }
   margin-top: 18px;
 }
 .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+.single-centered-figure {
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+}
+.single-centered-figure .figure-card {
+  width: min(100%, var(--figure-grid-max));
+}
+.single-centered-figure .figure-card img,
+.single-centered-figure .figure-card .figure-body,
+.single-centered-figure .figure-card .caption {
+  width: 100%;
+  max-width: 100%;
+}
 .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .eval-grid { align-items: start; }
 .eval-small img,

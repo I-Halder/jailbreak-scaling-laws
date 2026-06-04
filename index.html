@@ -230,6 +230,20 @@ p, li { color: #4a4a4a; font-size: 1rem; }
   margin-top: 18px;
 }
 .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+.single-centered-figure {
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+}
+.single-centered-figure .figure-card {
+  width: min(100%, var(--figure-grid-max));
+}
+.single-centered-figure .figure-card img,
+.single-centered-figure .figure-card .figure-body,
+.single-centered-figure .figure-card .caption {
+  width: 100%;
+  max-width: 100%;
+}
 .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .eval-grid { align-items: start; }
 .eval-small img,
@@ -712,7 +726,7 @@ pre {
           <p>The injected prompt pushes mass more directly into unsafe basins. Even the safest prompt graphs retain irreducible unsafe mass, producing the polynomial-exponential crossover.</p>
         </div>
       </div>
-      <div class="grid-2" style="margin-top: 1.1rem;">
+      <div class="grid-2 single-centered-figure" style="margin-top: 1.1rem;">
         <article class="figure-card card flat">
           <img src="assets/img/th1+th2.png" alt="Numerical attack success rate plot comparing weak and strong random-graph reweighting regimes.">
           <div class="figure-body">
