@@ -146,6 +146,9 @@ p, li { color: #4a4a4a; font-size: 1.08rem; }
   border-radius: 0;
   background: #ffffff;
 }
+.main-scaling-figure {
+  width: min(78%, 880px) !important;
+}
 .figure-card .figure-body { padding: 16px 0 0; }
 .grid-2, .grid-3 {
   display: grid;
@@ -245,6 +248,7 @@ pre {
   .button { min-height: 50px; padding: 0 20px; font-size: 1.15rem; }
   .tldr-box { padding: 21px 22px; border-radius: 18px; }
   .tldr-box p { text-align: left; font-size: 1.08rem; }
+  .main-scaling-figure { width: 100% !important; }
   .grid-2, .grid-3 { grid-template-columns: 1fr; }
 }
 .callout {
