@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jailbreak Scaling Laws for Large Language Models</title>
+  <meta name="description" content="Project page for Jailbreak Scaling Laws for Large Language Models: Polynomial-Exponential Crossover.">
+  <meta property="og:title" content="Jailbreak Scaling Laws for Large Language Models">
+  <meta property="og:description" content="Polynomial-exponential crossover in inference-time attack success scaling under adversarial prompt injection.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/img/GPT-Turbo_Llama3B_asr_fit_n_trials_2_k128_corrected_judge_org_v3.png">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script>
+    window.MathJax = { tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }, svg: { fontCache: 'global' } };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <script defer src="assets/js/main.js"></script>
+</head>
+<body>
+  <nav class="page-nav" aria-label="Primary navigation">
+    <div class="nav-inner">
+      <a class="nav-title" href="#top">Jailbreak Scaling Laws</a>
+      <div class="nav-links">
+        <a href="#overview">Overview</a>
+        <a href="#method">Theory</a>
+        <a href="#results">Results</a>
+        <a href="#resources">Resources</a>
+        <a href="#bibtex">BibTeX</a>
+      </div>
+    </div>
+  </nav>
+
+  <header id="top" class="hero">
+    <div class="kicker">Preprint project page</div>
+    <h1>Jailbreak Scaling Laws for Large Language Models</h1>
+    <p class="subtitle">Polynomial-Exponential Crossover</p>
+
+    <div class="authors">
+      <a href="mailto:ihalder@g.harvard.edu">Indranil Halder</a>,
+      <a href="mailto:annesyab@mit.edu">Annesya Banerjee</a>,
+      <a href="mailto:cpehlevan@g.harvard.edu">Cengiz Pehlevan</a>
+    </div>
+    <div class="affiliations">
+      Harvard SEAS · MIT Department of Brain and Cognitive Sciences · Harvard Medical School · Kempner Institute · Center for Brain Science
+    </div>
+
+    <div class="badges" aria-label="Affiliations">
+      <span class="badge">Harvard University</span>
+      <span class="badge">Massachusetts Institute of Technology</span>
+      <span class="badge">Kempner Institute</span>
+    </div>
+
+    <div class="buttons">
+      <a class="button" href="assets/paper/jailbreak-scaling-laws-draft.pdf">Paper PDF</a>
+      <a class="button secondary" href="paper-source/arxiv.tex">LaTeX source</a>
+      <a class="button secondary" href="mailto:ihalder@g.harvard.edu">Contact</a>
+      <span class="button disabled" title="Replace this with the public repository URL when available">Code link pending</span>
+    </div>
+  </header>
+
+  <main>
+    <section id="overview" class="card tldr">
+      <h2 class="section-title">TL;DR</h2>
+      <p class="lead"><strong>Adversarial prompt injection can change inference-time jailbreak scaling from slow polynomial growth to a much faster polynomial-exponential regime.</strong> The paper explains this crossover with a minimal statistical mechanism and a spin-glass-based teacher-student model in which injected prompts act like an effective field aligned with unsafe response clusters.</p>
+    </section>
+
+    <section class="card figure-card" aria-labelledby="hero-figure-title">
+      <img src="assets/img/GPT-Turbo_Llama3B_asr_fit_n_trials_2_k128_corrected_judge_org_v3.png" alt="Attack success scaling comparison for GPT-Turbo and Llama-3.2-3B under prompt injection.">
+      <div class="figure-body">
+        <h2 id="hero-figure-title" class="section-title">Scaling behavior under inference-time sampling</h2>
+        <p class="caption">Attack success rate $\Pi_k$ plotted against the number of inference-time samples $k$. The empirical curves motivate two regimes: polynomial scaling in weaker/no-injection settings and a faster polynomial-exponential crossover under stronger prompt injection.</p>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="problem-title">
+      <h2 id="problem-title" class="section-title">Problem setup</h2>
+      <p class="lead">The central question is how the attack success rate changes when a model is sampled multiple times at inference time. For each prompt, an attack is counted as successful if at least one of the $k$ generated responses violates the safety criterion under the evaluation protocol.</p>
+      <div class="grid-3">
+        <div class="metric">
+          <div class="label">Object of study</div>
+          <div class="value">$\Pi_k$</div>
+          <p>Probability of at least one successful unsafe generation among $k$ samples.</p>
+        </div>
+        <div class="metric">
+          <div class="label">Baseline regime</div>
+          <div class="value">poly.</div>
+          <p>Slow scaling with sample count when injection is absent or weak.</p>
+        </div>
+        <div class="metric">
+          <div class="label">Injected regime</div>
+          <div class="value">poly-exp.</div>
+          <p>Faster scaling when the injected prompt acts as a stronger adversarial bias.</p>
+        </div>
+      </div>
+      <div class="equation-block" aria-label="Polynomial and polynomial-exponential scaling equations">
+        <div class="eq-label">Scaling forms</div>
+        $$\log(-\log \Pi_k) \sim -\hat\nu \log k + \log \hat C$$
+        $$\log(-\log \Pi_k) \sim -\hat\nu \log k - \hat\mu k + \log \hat C$$
+      </div>
+      <p>The coefficient $\hat\nu$ captures the polynomial component, while $\hat\mu$ captures the exponential correction associated with stronger adversarial alignment.</p>
+    </section>
+
+    <section id="method" class="card" aria-labelledby="theory-title">
+      <h2 id="theory-title" class="section-title">Minimal model and spin-glass picture</h2>
+      <p class="lead">The theoretical story has two layers. A minimal statistical model identifies the assumptions under which the two ASR regimes arise. A spin-glass-based teacher-student model then gives a concrete generative picture: safe and unsafe responses correspond to clusters in a rugged low-energy landscape, and prompt injection acts like an external field that increases mass near unsafe clusters.</p>
+      <div class="grid-2">
+        <div class="callout">
+          <h3>Weak effective field</h3>
+          <p>The student and teacher measures remain in a related replica-symmetry-breaking phase, leading to power-law behavior over the relevant inference-time range.</p>
+        </div>
+        <div class="callout">
+          <h3>Strong effective field</h3>
+          <p>The student measure is driven toward an adversarially aligned regime, producing an exponential correction in sample count.</p>
+        </div>
+      </div>
+      <div class="grid-2" style="margin-top: 1.1rem;">
+        <article class="figure-card card flat">
+          <img src="assets/img/th1.png" alt="Numerical attack success rate plot for the spin-glass model in one theorem regime.">
+          <div class="figure-body">
+            <p class="caption">Spin-glass numerical study for the weak-field scaling regime.</p>
+          </div>
+        </article>
+        <article class="figure-card card flat">
+          <img src="assets/img/th1+th2.png" alt="Numerical attack success rate plot comparing two spin-glass theorem regimes.">
+          <div class="figure-body">
+            <p class="caption">Transition behavior when increasing the effective field strength.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="results" class="card" aria-labelledby="results-title">
+      <h2 id="results-title" class="section-title">Empirical results across model families</h2>
+      <p class="lead">The experiments evaluate inference-time scaling under no injection, GCG-based prompt injection, and AutoDAN-based prompt injection using LLM-as-a-judge evaluation. Results are reported across Llama and OLMo instruction-tuned models, model sizes from 3B to 70B, and benchmark datasets including AdvBench and HarmBench.</p>
+
+      <div class="tabs" role="tablist" data-tab-group="results-tabs" aria-label="Results tabs">
+        <button class="tab-button" role="tab" aria-selected="true" aria-controls="tab-llama" id="tab-llama-button">Llama</button>
+        <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-olmo" id="tab-olmo-button" tabindex="-1">OLMo</button>
+        <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-categories" id="tab-categories-button" tabindex="-1">Category analysis</button>
+        <button class="tab-button" role="tab" aria-selected="false" aria-controls="tab-eval" id="tab-eval-button" tabindex="-1">Evaluation</button>
+      </div>
+
+      <div id="tab-llama" class="tab-panel" role="tabpanel" aria-labelledby="tab-llama-button" data-tab-group="results-tabs">
+        <div class="grid-2">
+          <article class="figure-card card flat">
+            <img src="assets/img/llama_8b_Results_CorrectedLogFit_K128_Fit7Points_DataOrgConstrainedFit_02212026_ExtendedK.png" alt="Llama-3-8B inference-time ASR scaling under GCG injection.">
+            <div class="figure-body"><p class="caption">Llama-3-8B-Instruct on AdvBench under GCG-based injection.</p></div>
+          </article>
+          <article class="figure-card card flat">
+            <img src="assets/img/llama_8b_Autodan_Results_CorrectedLogFit_K128_Fit7Points_DataOrgConstrainedFit_02212026_ExtendedK.png" alt="Llama-3-8B inference-time ASR scaling under AutoDAN injection.">
+            <div class="figure-body"><p class="caption">Llama-3-8B-Instruct on AdvBench under AutoDAN-based injection.</p></div>
+          </article>
+          <article class="figure-card card flat">
+            <img src="assets/img/Llama70b_asr_fit_n_trials_Advbench_GCG.png" alt="Llama-3-70B inference-time ASR scaling under GCG injection.">
+            <div class="figure-body"><p class="caption">Llama-3-70B-Instruct on AdvBench under GCG-based injection.</p></div>
+          </article>
+          <article class="figure-card card flat">
+            <img src="assets/img/Llama70b_asr_fit_Advbench_AutoDAN.png" alt="Llama-3-70B inference-time ASR scaling under AutoDAN injection.">
+            <div class="figure-body"><p class="caption">Llama-3-70B-Instruct on AdvBench under AutoDAN-based injection.</p></div>
+          </article>
+        </div>
+      </div>
+
+      <div id="tab-olmo" class="tab-panel" role="tabpanel" aria-labelledby="tab-olmo-button" data-tab-group="results-tabs" hidden>
+        <div class="grid-2">
+          <article class="figure-card card flat">
+            <img src="assets/img/Olmo_2_32b_Advbench_asr_fit_n_trials_2_k128_corrected_judge_org.png" alt="OLMo-2-32B inference-time ASR scaling under GCG injection.">
+            <div class="figure-body"><p class="caption">OLMo-2-0325-32B-Instruct on AdvBench under GCG-based injection.</p></div>
+          </article>
+          <article class="figure-card card flat">
+            <img src="assets/img/Olmo_2_32b_Advbench_AutoDAN_asr_fit_n_trials_2_k128_corrected_judge_org.png" alt="OLMo-2-32B inference-time ASR scaling under AutoDAN injection.">
+            <div class="figure-body"><p class="caption">OLMo-2-0325-32B-Instruct on AdvBench under AutoDAN-based injection.</p></div>
+          </article>
+          <article class="figure-card card flat">
+            <img src="assets/img/Olmo_3_1_32b_Advbench_asr_fit_n_trials_2_k128_corrected_judge_org.png" alt="OLMo-3.1-32B inference-time ASR scaling under GCG injection.">
+            <div class="figure-body"><p class="caption">OLMo-3.1-32B-Instruct on AdvBench under GCG-based injection.</p></div>
+          </article>
+          <article class="figure-card card flat">
+            <img src="assets/img/Olmo_3_1_32b_Advbench_AutoDAN_asr_fit_n_trials_2_k128_corrected_judge_org.png" alt="OLMo-3.1-32B inference-time ASR scaling under AutoDAN injection.">
+            <div class="figure-body"><p class="caption">OLMo-3.1-32B-Instruct on AdvBench under AutoDAN-based injection.</p></div>
+          </article>
+        </div>
+      </div>
+
+      <div id="tab-categories" class="tab-panel" role="tabpanel" aria-labelledby="tab-categories-button" data-tab-group="results-tabs" hidden>
+        <p>Category-wise analysis compares ASR across harmful prompt categories and attack settings.</p>
+        <div class="grid-2">
+          <article class="figure-card card flat">
+            <img src="assets/img/llama_3_8b_comparison_categorywise_Advbench_GCG_Judge.png" alt="Category-wise ASR for Llama-3-8B on AdvBench under GCG injection.">
+            <div class="figure-body"><p class="caption">Llama-3-8B-Instruct: AdvBench categories, GCG setting.</p></div>
+          </article>
+          <article class="figure-card card flat">
+            <img src="assets/img/llama_3_8b_comparison_categorywise_Advbench_Autodan_Judge.png" alt="Category-wise ASR for Llama-3-8B on AdvBench under AutoDAN injection.">
+            <div class="figure-body"><p class="caption">Llama-3-8B-Instruct: AdvBench categories, AutoDAN setting.</p></div>
+          </article>
+          <article class="figure-card card flat">
+            <img src="assets/img/olmo_2_32b_comparison_categorywise_Harmbench_standard_GCG_Judge.png" alt="Category-wise ASR for OLMo-2-32B on HarmBench under GCG injection.">
+            <div class="figure-body"><p class="caption">OLMo-2-0325-32B-Instruct: HarmBench categories, GCG setting.</p></div>
+          </article>
+          <article class="figure-card card flat">
+            <img src="assets/img/olmo_2_32b_comparison_categorywise_Harmbench_standard_Autodan_Judge.png" alt="Category-wise ASR for OLMo-2-32B on HarmBench under AutoDAN injection.">
+            <div class="figure-body"><p class="caption">OLMo-2-0325-32B-Instruct: HarmBench categories, AutoDAN setting.</p></div>
+          </article>
+        </div>
+      </div>
+
+      <div id="tab-eval" class="tab-panel" role="tabpanel" aria-labelledby="tab-eval-button" data-tab-group="results-tabs" hidden>
+        <p>The paper compares refusal-string evaluation to LLM-as-a-judge evaluation and reports that refusal-string checks can overestimate attack success when generations are incoherent, unrelated, or factually incorrect.</p>
+        <div class="grid-2">
+          <article class="figure-card card flat">
+            <img src="assets/img/JB_Rate_Analysis_RefusalString_vs_JudgeLLM_JailbreakStrength.png" alt="Comparison of refusal-string and LLM-as-a-judge evaluation methods.">
+            <div class="figure-body"><p class="caption">Refusal-string-based versus LLM-as-a-judge ASR measurement.</p></div>
+          </article>
+          <article class="figure-card card flat">
+            <img src="assets/img/Harmfulness_Prop_GE4_GroupedBar_gpt4.png" alt="Harmfulness scores for successful jailbreak responses across attack methods.">
+            <div class="figure-body"><p class="caption">Harmfulness analysis of successful jailbroken responses.</p></div>
+          </article>
+        </div>
+      </div>
+
+      <div class="pill-list" aria-label="Experiment dimensions">
+        <span class="pill">Inference-time sampling</span>
+        <span class="pill">LLM-as-a-judge ASR</span>
+        <span class="pill">AdvBench</span>
+        <span class="pill">HarmBench</span>
+        <span class="pill">Llama 3 / 3.2</span>
+        <span class="pill">OLMo 2 / 3.1</span>
+      </div>
+    </section>
+
+    <section class="card" aria-labelledby="takeaways-title">
+      <h2 id="takeaways-title" class="section-title">Takeaways</h2>
+      <div class="grid-3">
+        <div class="callout">
+          <h3>Sampling matters</h3>
+          <p>Multiple inference-time samples can substantially change the chance of observing at least one unsafe output.</p>
+        </div>
+        <div class="callout">
+          <h3>Injection changes scaling</h3>
+          <p>Prompt injection can move ASR from polynomial growth toward a polynomial-exponential crossover.</p>
+        </div>
+        <div class="callout">
+          <h3>Theory predicts regimes</h3>
+          <p>A spin-glass landscape gives an interpretable model of safe and unsafe response clusters and the role of injection strength.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="resources" class="card" aria-labelledby="resources-title">
+      <h2 id="resources-title" class="section-title">Resources</h2>
+      <p class="lead">This repository is a static GitHub Pages site. Replace the placeholder code and arXiv links below after public release.</p>
+      <div class="buttons" style="justify-content: flex-start;">
+        <a class="button" href="assets/paper/jailbreak-scaling-laws-draft.pdf">Download paper draft</a>
+        <a class="button secondary" href="paper-source/arxiv.tex">Download LaTeX source</a>
+        <a class="button secondary" href="assets/img/GPT-Turbo_Llama3B_asr_fit_n_trials_2_k128_corrected_judge_org_v3.png">Main figure</a>
+      </div>
+    </section>
+
+    <section id="bibtex" class="card" aria-labelledby="bibtex-title">
+      <h2 id="bibtex-title" class="section-title">BibTeX</h2>
+      <pre class="bibtex"><code>@misc{halder2026jailbreakscalinglaws,
+  title  = {Jailbreak Scaling Laws for Large Language Models: Polynomial--Exponential Crossover},
+  author = {Halder, Indranil and Banerjee, Annesya and Pehlevan, Cengiz},
+  year   = {2026},
+  note   = {Preprint}
+}</code></pre>
+    </section>
+
+    <p class="footer">This project page is a static academic website prepared for GitHub Pages. Replace pending links and metadata before public release.</p>
+  </main>
+</body>
+</html>
